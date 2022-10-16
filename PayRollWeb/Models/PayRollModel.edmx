@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PayRollModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="SocialSecurity" Type="varchar" MaxLength="25" />
+          <Property Name="Address" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Loans">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Employee" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="Balance" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PayRoll">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Employee" Type="int" Nullable="false" />
+          <Property Name="Salary" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PayRollDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ExtraDay" Type="money" />
+          <Property Name="Advancement" Type="money" />
+          <Property Name="Loan" Type="int" />
+          <Property Name="Incentive" Type="money" />
+          <Property Name="Holidays" Type="money" />
+          <Property Name="Bonus" Type="money" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="PayRoll" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Loans_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Loans" Type="Self.Loans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Loans">
+              <PropertyRef Name="Employee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayRoll_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="PayRoll" Type="Self.PayRoll" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayRoll">
+              <PropertyRef Name="Employee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayRollDetail_Loans">
+          <End Role="Loans" Type="Self.Loans" Multiplicity="0..1" />
+          <End Role="PayRollDetail" Type="Self.PayRollDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Loans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayRollDetail">
+              <PropertyRef Name="Loan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayRollDetail_PayRoll">
+          <End Role="PayRoll" Type="Self.PayRoll" Multiplicity="1" />
+          <End Role="PayRollDetail" Type="Self.PayRollDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayRoll">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayRollDetail">
+              <PropertyRef Name="PayRoll" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PayRollModelStoreContainer">
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Loans" EntityType="Self.Loans" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PayRoll" EntityType="Self.PayRoll" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PayRollDetail" EntityType="Self.PayRollDetail" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Loans_Employee" Association="Self.FK_Loans_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Loans" EntitySet="Loans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayRoll_Employee" Association="Self.FK_PayRoll_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="PayRoll" EntitySet="PayRoll" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayRollDetail_Loans" Association="Self.FK_PayRollDetail_Loans">
+            <End Role="Loans" EntitySet="Loans" />
+            <End Role="PayRollDetail" EntitySet="PayRollDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayRollDetail_PayRoll" Association="Self.FK_PayRollDetail_PayRoll">
+            <End Role="PayRoll" EntitySet="PayRoll" />
+            <End Role="PayRollDetail" EntitySet="PayRollDetail" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PayRollModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SocialSecurity" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Loans" Relationship="Self.FK_Loans_Employee" FromRole="Employee" ToRole="Loans" />
+          <NavigationProperty Name="PayRoll" Relationship="Self.FK_PayRoll_Employee" FromRole="Employee" ToRole="PayRoll" />
+        </EntityType>
+        <EntityType Name="Loans">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Employee" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Balance" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="Employee1" Relationship="Self.FK_Loans_Employee" FromRole="Loans" ToRole="Employee" />
+          <NavigationProperty Name="PayRollDetail" Relationship="Self.FK_PayRollDetail_Loans" FromRole="Loans" ToRole="PayRollDetail" />
+        </EntityType>
+        <EntityType Name="PayRoll">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Employee" Type="Int32" Nullable="false" />
+          <Property Name="Salary" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="Employee1" Relationship="Self.FK_PayRoll_Employee" FromRole="PayRoll" ToRole="Employee" />
+          <NavigationProperty Name="PayRollDetail" Relationship="Self.FK_PayRollDetail_PayRoll" FromRole="PayRoll" ToRole="PayRollDetail" />
+        </EntityType>
+        <EntityType Name="PayRollDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ExtraDay" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Advancement" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Loan" Type="Int32" />
+          <Property Name="Incentive" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Holidays" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Bonus" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PayRoll" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Loans" Relationship="Self.FK_PayRollDetail_Loans" FromRole="PayRollDetail" ToRole="Loans" />
+          <NavigationProperty Name="PayRoll1" Relationship="Self.FK_PayRollDetail_PayRoll" FromRole="PayRollDetail" ToRole="PayRoll" />
+        </EntityType>
+        <Association Name="FK_Loans_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Loans" Type="Self.Loans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Loans">
+              <PropertyRef Name="Employee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayRoll_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="PayRoll" Type="Self.PayRoll" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayRoll">
+              <PropertyRef Name="Employee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayRollDetail_Loans">
+          <End Role="Loans" Type="Self.Loans" Multiplicity="0..1" />
+          <End Role="PayRollDetail" Type="Self.PayRollDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Loans">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayRollDetail">
+              <PropertyRef Name="Loan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PayRollDetail_PayRoll">
+          <End Role="PayRoll" Type="Self.PayRoll" Multiplicity="1" />
+          <End Role="PayRollDetail" Type="Self.PayRollDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayRoll">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PayRollDetail">
+              <PropertyRef Name="PayRoll" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PayRollEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employee" EntityType="Self.Employee" />
+          <EntitySet Name="Loans" EntityType="Self.Loans" />
+          <EntitySet Name="PayRoll" EntityType="Self.PayRoll" />
+          <EntitySet Name="PayRollDetail" EntityType="Self.PayRollDetail" />
+          <AssociationSet Name="FK_Loans_Employee" Association="Self.FK_Loans_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Loans" EntitySet="Loans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayRoll_Employee" Association="Self.FK_PayRoll_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="PayRoll" EntitySet="PayRoll" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayRollDetail_Loans" Association="Self.FK_PayRollDetail_Loans">
+            <End Role="Loans" EntitySet="Loans" />
+            <End Role="PayRollDetail" EntitySet="PayRollDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PayRollDetail_PayRoll" Association="Self.FK_PayRollDetail_PayRoll">
+            <End Role="PayRoll" EntitySet="PayRoll" />
+            <End Role="PayRollDetail" EntitySet="PayRollDetail" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PayRollModelStoreContainer" CdmEntityContainer="PayRollEntities">
+          <EntitySetMapping Name="Employee">
+            <EntityTypeMapping TypeName="PayRollModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SocialSecurity" ColumnName="SocialSecurity" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Loans">
+            <EntityTypeMapping TypeName="PayRollModel.Loans">
+              <MappingFragment StoreEntitySet="Loans">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Employee" ColumnName="Employee" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PayRoll">
+            <EntityTypeMapping TypeName="PayRollModel.PayRoll">
+              <MappingFragment StoreEntitySet="PayRoll">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Employee" ColumnName="Employee" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PayRollDetail">
+            <EntityTypeMapping TypeName="PayRollModel.PayRollDetail">
+              <MappingFragment StoreEntitySet="PayRollDetail">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ExtraDay" ColumnName="ExtraDay" />
+                <ScalarProperty Name="Advancement" ColumnName="Advancement" />
+                <ScalarProperty Name="Loan" ColumnName="Loan" />
+                <ScalarProperty Name="Incentive" ColumnName="Incentive" />
+                <ScalarProperty Name="Holidays" ColumnName="Holidays" />
+                <ScalarProperty Name="Bonus" ColumnName="Bonus" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PayRoll" ColumnName="PayRoll" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
